@@ -1,5 +1,7 @@
 # 题目代码对照表
-[toc]
+<!--toc-->
+- [数组和字符串](#数组和字符串)
+    - [1991. 找到数组的中间位置](#找到数组的中间位置)
 
 ## 数组和字符串
 ### [1991. 找到数组的中间位置](https://leetcode.cn/classic/problems/find-the-middle-index-in-array/description/)
