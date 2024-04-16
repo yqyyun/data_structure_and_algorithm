@@ -7,4 +7,5 @@
 ### [1991. 找到数组的中间位置](https://leetcode.cn/classic/problems/find-the-middle-index-in-array/description/)
 -> [FindMiddleIndex.c](leetbook/array_and_string/FindMiddleIndex.c)
 
-
+### [35. 搜索插入位置](https://leetcode.cn/problems/search-insert-position/description/)
+-> [SearchInsertPosition.c](leetcode/array_and_string/SearchInsertPosition.c)
