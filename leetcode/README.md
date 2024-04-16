@@ -8,4 +8,4 @@
 -> [FindMiddleIndex.c](leetbook/array_and_string/FindMiddleIndex.c)
 
 ### [35. 搜索插入位置](https://leetcode.cn/problems/search-insert-position/description/)
--> [SearchInsertPosition.c](leetcode/array_and_string/SearchInsertPosition.c)
+-> [SearchInsertPosition.c](leetbook/array_and_string/SearchInsertPosition.c)
