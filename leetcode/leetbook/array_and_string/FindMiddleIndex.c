@@ -31,12 +31,13 @@ int findMiddleIndex(int *nums, int numsSize) {
 }
 
 /**
+* 将变长数组改为动态内存分配，c11 -> c99
+*
 * 前缀和：时间复杂度O(n)，空间复杂度O(n)
 *
 * 执行用时分布0ms 击败100.00%使用 C 的用户
 * 消耗内存分布5.83MB击败17.49%使用 C 的用户
 
-*   将变长数组改为动态内存分配，c11 -> c99
 *   Change variable-arrays to dynamically allocate memory, c11 -> c99.
 **/
 int findMiddleIndex_0(int *nums, int numsSize) {

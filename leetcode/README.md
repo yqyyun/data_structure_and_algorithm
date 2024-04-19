@@ -9,3 +9,6 @@
 
 ### [35. 搜索插入位置](https://leetcode.cn/problems/search-insert-position/description/)
 -> [SearchInsertPosition.c](leetbook/array_and_string/SearchInsertPosition.c)
+
+### [56. 合并区间](https://leetcode.cn/problems/merge-intervals/description/)
+-> [MergeIntervals.c](leetbook/array_and_string/MergeIntervals.c)
