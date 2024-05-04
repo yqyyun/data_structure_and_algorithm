@@ -12,3 +12,8 @@
 
 ### [56. 合并区间](https://leetcode.cn/problems/merge-intervals/description/)
 -> [MergeIntervals.c](leetbook/array_and_string/MergeIntervals.c)
+
+### [48. 旋转图像](https://leetcode.cn/problems/rotate-image/description/)
+-> [RotateImage.c](leetbook/array_and_string/RotateImage.c)
+
+
