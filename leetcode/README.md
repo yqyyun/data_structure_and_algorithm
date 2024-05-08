@@ -20,3 +20,7 @@
     <https://leetcode.cn/problems/zero-matrix-lcci/>
     <https://leetcode.cn/problems/set-matrix-zeroes/description/>
 -> [ZeroMatrix.c](leetbook/array_and_string/ZeroMatrix.c)
+
+### [498. 对角线遍历](https://leetcode.cn/problems/diagonal-traverse/description/)
+-> [DiagonalTraverse.c](leetbook/array_and_string/DiagonalTraverse.c)
+
