@@ -24,3 +24,7 @@
 ### [498. 对角线遍历](https://leetcode.cn/problems/diagonal-traverse/description/)
 -> [DiagonalTraverse.c](leetbook/array_and_string/DiagonalTraverse.c)
 
+### [14. 最长公共前缀](https://leetcode.cn/problems/longest-common-prefix/description/)
+-> [LongestCommonPrefix.c](leetbook/array_and_string/LongestCommonPrefix.c)
+
+
