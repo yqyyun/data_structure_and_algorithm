@@ -104,11 +104,71 @@ char* longestCommonPrefix_2(char** strs, int strsSize) {
         return lcp;
 }
 
+char* longestCommonPrefix_sub(char**, int, int);
+char* commonPrefix(char* leftLcp, char* rightLcp);
+/**
+* 方法三：分治
+*   LCP(S₁...Sn)  = LCP(S₁...Sk),LCP(Sk+1...Sn))
+*   其中LCP(S₁...Sn)是字符串的最长公共前缀，1<k<n。
+*
+*   对问题LCP（Si...Sj)可以分解长两个子问题
+*   LCP(Si...Smid)与LCP(Smid+1...Sj), 其中mid=(i+j)/2。
+*   对两个子问题分别求解，然后对两个子问题的解计算最长公共前缀。
+*
+*   时间复杂度O(mn), m是字符串平均长度，n是字符串数量。
+*   空间复杂度O(mlogn), m是字符串的平均长度，n是字符串数量.
+*   空间复杂度主要取决于递归调用的层数，层数最大为logn,ie.log₂n，
+*   每层需要m的空间存储返回结果。
+*
+* 执行用时分布 0 ms 击败 100.00% 使用 C 的用户
+* 消耗内存分布 5.85 MB 击败 13.43% 使用 C 的用户
+*
+**/
+char* longestCommonPrefix_3(char** strs, int strsSize) {
+    if(NULL == strs) {
+        return "";
+    }
+    return longestCommonPrefix_sub(strs, 0, strsSize - 1);
+}  
+
+char* longestCommonPrefix_sub(char** strs, int start, int end) {
+    //printf("(%d, %d)\n", start, end);
+    if (start == end) {
+        return strs[start];
+    }
+    //int mid = start + (end - start)/2 ;
+    // 根据题设，无需担心溢出
+    int mid = (start + end) >> 1;
+    char* leftLcp = longestCommonPrefix_sub(strs, start, mid);
+    char* rightLcp = longestCommonPrefix_sub(strs, mid+1, end);
+    return commonPrefix(leftLcp, rightLcp);
+
+}
+
+char* commonPrefix(char* leftLcp, char* rightLcp) {
+    // 就地修改;
+    //printf("lfetLcp = %s, rightLcp = %s\n", leftLcp, rightLcp);
+    char* prefix = leftLcp;
+    while (*leftLcp != '\0' && *rightLcp != '\0') {
+        if (*leftLcp != *rightLcp) {
+            break;
+        }
+        leftLcp++;
+        rightLcp++;
+    }
+    // 由于是就地修改，若修改字符串常亮空间会导致段错误。
+    *leftLcp = '\0';
+    return prefix;
+}
+
 int main(void) {
     char* strs[2];
-    strs[0] = "ab";
-    strs[1] = "a";
-    char* p = longestCommonPrefix_2((char**)strs, 2);
+    //strs[0] = "ab";
+    //strs[1] = "a";
+    char strs1[2][3] = {{'a', 'b', '\0'}, {'a', '\0'}};
+    strs[0] = strs1[0];
+    strs[1] = strs1[1];
+    char* p = longestCommonPrefix_3((char**)strs, 2);
     printf("*p = %s\n", p);
     return 0;
 }
