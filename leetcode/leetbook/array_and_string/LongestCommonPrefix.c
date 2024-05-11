@@ -72,11 +72,43 @@ char* longestCommonPrefix_1(char** strs, int strsSize) {
     return cp;
 }
 
+/** 
+* 方法二：横向扫描
+*   先得到S1和S2最长公共前缀，LCP(S1S2),在得到LCP(S1S2)和S3的最长公共前缀。
+*   LCP(S₁S₂...Sn) = LCP(LCP(LCP(S₁,S₂),S₃)...Sn)
+*
+*  时间复杂度O(mn)，n是字符串平均长度 O(1);
+* 执行用时分布 3 ms 击败 45.45% 使用 C 的用户
+* 消耗内存分布 5.60 MB 击败 58.70% 使用 C 的用户
+*
+**/
+char* longestCommonPrefix_2(char** strs, int strsSize) {
+        int maxSize = 200;
+        char* lcp = (char*)malloc(maxSize * sizeof(char));
+
+        // 复制s1到lcp;
+        char* s1 = strs[0];
+        char* p = lcp;
+
+        while((*p++=*s1++) != '\0');
+
+        for (int i = 1; i < strsSize && *lcp !='\0'; ++i) {
+            char* c = strs[i];
+            char* p = lcp;
+            while(*c != '\0' && *c == *p){
+                c++;
+                p++;
+            }
+            *p = '\0';
+        }
+        return lcp;
+}
+
 int main(void) {
     char* strs[2];
     strs[0] = "ab";
     strs[1] = "a";
-    char* p = longestCommonPrefix_1((char**)strs, 2);
+    char* p = longestCommonPrefix_2((char**)strs, 2);
     printf("*p = %s\n", p);
     return 0;
 }
