@@ -146,12 +146,104 @@ char* longestPalindrome(char* s) {
     return s;
 }
 
+/**
+* 方法一优化：
+*   假设已经找到长度为k的回文子串，那么长度小于k的子串就没必要去查找和验证了。
+*   即按照方法一函数的实现：游标从palindromes数组的左端，只能向右移动，不能来回移动了。
+*
+*   优化后的时间复杂度最坏为O(m²)，回文子串长度为1，最好时间复杂度为O(m)回文子串长度就是m。
+*   空间复杂度为O(m²)，但可以改进为O(m)。
+*   本函数空间复杂度为O(m²)。
+*
+* 执行用时分布 176 ms 击败 21.02% 使用 C 的用户
+* 消耗内存分布 6.81 MB 击败 30.88% 使用 C 的用户
+**/
+char* longestPalindrome_1_imp1(char* s) {
+    int length = 0;
+    while (s[length] != '\0'){
+        length++;
+    }
+    int size = length + 1;
+    //空间复杂度为O(m²)。
+    char palindromes[size][size];
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            palindromes[i][j] = 0;
+        }
+    }
+    int maxl = 0;
+    for (int i = 0; (i + maxl) < length; ++i) {
+        int j = length;
+        do {
+            while (--j > (i + maxl) && s[j] != s[i]);
+            if (j < (i + maxl)) {
+                break;
+            }
+            if (isPalindrome(s, i, j)) {
+                int pos = j - i + 1;
+                if (pos > maxl) {
+                    maxl = pos;
+                }
+                for (int k = pos-1; k > -1; --k,--j) {
+                    palindromes[pos][k] = s[j];
+                }
+                break;
+            }
+        } while(true);
+    }
+    char* lp = (char*)malloc(size * sizeof(char));
+    char* plp = lp;
+    char* src = palindromes[maxl];
+    while((*plp++ = *src++) != '\0');
+    return lp;
+}
+
+/**
+*   空间复杂度为O(m);
+* 执行用时分布 103 ms 击败 46.66% 使用 C 的用户
+* 消耗内存分布 5.89 MB 击败 69.41% 使用 C 的用户
+**/
+char* longestPalindrome_1_imp2(char* s) {
+    int length = 0;
+    while (s[length] != '\0'){
+        length++;
+    }
+    int size = length + 1;
+    //空间复杂度为O(m)。
+    char* lpa = (char*)calloc(size, sizeof(char));
+
+    int maxl = 0;
+    for (int i = 0; (i + maxl) < length; ++i) {
+        int j = length;
+        do {
+            while (--j > (i + maxl) && s[j] != s[i]);
+            if (j < (i + maxl)) {
+                break;
+            }
+            if (isPalindrome(s, i, j)) {
+                int pos = j - i + 1;
+                if (pos > maxl) {
+                    maxl = pos;
+                }
+                for (int k = pos-1; k > -1; --k,--j) {
+                    lpa[k] = s[j];
+                }
+                break;
+            }
+        } while(true);
+    }
+    return lpa;
+}
+/**
+*   方法二：扩散查找，由内向外。
+*   回文子串
+**/
 
 int main(void) {
     char s1[] = {'c','b','b','d','\0'};
     char s2[] = {'b','a','b','a','d','\0'};
-    char* rs1 = longestPalindrome(s1);
-    char* rs2 = longestPalindrome(s2);
+    char* rs1 = longestPalindrome_1_imp2(s1);
+    char* rs2 = longestPalindrome_1_imp2(s2);
     printf("%s\n", rs1);
     printf("%s\n", rs2);
     return 0;
