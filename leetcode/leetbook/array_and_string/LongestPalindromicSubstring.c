@@ -5,6 +5,7 @@
 /**
 *   5. 最长回文子串 Longest Palindromic Substring
 *   <https://leetcode.cn/problems/longest-palindromic-substring/description/>
+*   已发布到力扣上的题解：<https://leetcode.cn/problems/longest-palindromic-substring/solutions/2776334/fang-fa-er-kuo-san-cha-zhao-you-nei-xian-nfew>
 **/
 
 /**
@@ -236,14 +237,68 @@ char* longestPalindrome_1_imp2(char* s) {
 }
 /**
 *   方法二：扩散查找，由内向外。
-*   回文子串
+*   回文子串总是对称的：
+*       当子串长度为偶数时，mid=(length-1)/2
+*           S[mid-(i-1)]≡S[mid+i], i=1,2,...,mid。
+*       当子串长度为奇数时，mid=(length-1)/2
+*           S[mid-i]≡S[mid+1], i=1,2,...,mid。
+*   此时回文子串的长度是由内向两侧逐渐扩散的，因此叫扩散查找。
+*   
+*   时间复杂度O(mn)，m为字符串长度，n为回文子串平均长度
+*   空间复杂度O(m), m为字符串长度。
+*
+* 执行用时分布 6 ms 击败 94.01% 使用 C 的用户
+* 消耗内存分布 5.96 MB 击败 63.43% 使用 C 的用户
 **/
+char* longestPalindrome_2(char* s) {
+    int length = -1;
+    while(s[++length] != '\0');
+    //下标为回文子串长度，元素值为回文子串在s中的下标位置（从0开始）
+    int pals[length+1];
+    for (int i = 0; i < length+1; ++i)
+        pals[i] = -1;
+    //
+    for (int i = 0; i < length; ++i) {
+        // 按照偶数长度扩展
+        int l = i, r = i + 1;
+        for (; l > -1 && r < length; --l, ++r) {
+            if (s[l] != s[r]) {
+                //回文子串扩展结束
+                break;
+            }
+        }
+        int size = r - l - 1;
+        // (l, r)
+        pals[size] = l + 1;
+        // 按照奇数长度扩展
+        l = i - 1, r = i + 1;
+        for (; l > -1 && r < length; --l, ++r) {
+            if (s[l] != s[r]) {
+                //回文子串扩展结束
+                break;
+            }
+        }
+        size = r - l - 1;
+        pals[size] = l + 1;
+    }
+    for (int i = length; i > -1; --i) {
+        if (pals[i] != -1) {
+            // 就地返回 i是回文字长长度，pals[i]是起点。
+            int start = pals[i];
+            // '\0'字符位置
+            //int e = pals[i] + i;
+            s[start + i] = '\0';
+            return s + start;
+        }
+    }
+    return s + length - 1;
+}
 
 int main(void) {
     char s1[] = {'c','b','b','d','\0'};
     char s2[] = {'b','a','b','a','d','\0'};
-    char* rs1 = longestPalindrome_1_imp2(s1);
-    char* rs2 = longestPalindrome_1_imp2(s2);
+    char* rs1 = longestPalindrome_2(s1);
+    char* rs2 = longestPalindrome_2(s2);
     printf("%s\n", rs1);
     printf("%s\n", rs2);
     return 0;
