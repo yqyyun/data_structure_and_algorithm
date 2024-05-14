@@ -294,11 +294,110 @@ char* longestPalindrome_2(char* s) {
     return s + length - 1;
 }
 
+/**
+*   方法二优化：
+*   不再保存所有回文子串，改成只保留目前得到的最长回文子串。
+*   空间复杂度从O(m) 变为O(1)
+*
+* 执行用时分布 6 ms 击败 93.98% 使用 C 的用户
+* 消耗内存分布 5.57 MB 击败 99.53% 使用 C 的用户
+*
+*   备注：优化之处只是空间复杂度变成O(1)，执行用时理论不会减少，
+*   甚至还会增加，变成负优化。
+*   这是因为每次更新maxl和start时都会执行判断，这和未优化之前的
+*   循环是一个效果，但是maxl和start每次循环都会执行两次，也就是2m
+*   次。而未优化之前的循环只会在最后反向遍历，找到第一个有效值就结束
+*   了，也就是最多m 次(回文子串长度为1时）。比较次数少了至少一半。
+**/
+char* longestPalindrome_2_impr1(char* s) {
+    int length = -1;
+    while(s[++length] != '\0');
+    // 
+    int maxl = 0;
+    int start = 0;
+    for (int i = 0; i < length; ++i) {
+        // 按照偶数长度扩展
+        int l = i, r = i + 1;
+        for (; l > -1 && r < length; --l, ++r) {
+            if (s[l] != s[r]) {
+                //回文子串扩展结束
+                break;
+            }
+        }
+        int size = r - l - 1;
+        // (l, r)
+        if (size > maxl) {
+            maxl = size;
+            start = l + 1;
+        }
+        // 按照奇数长度扩展
+        l = i - 1, r = i + 1;
+        for (; l > -1 && r < length; --l, ++r) {
+            if (s[l] != s[r]) {
+                //回文子串扩展结束
+                break;
+            }
+        }
+        size = r - l - 1;
+        if (size > maxl) {
+            maxl = size;
+            start = l + 1;
+        }
+    }
+    s[start + maxl] = '\0';
+    return s + start;
+}
+
+/**
+*   方法二优化：
+*   取消s.length计算，改为指针访问字符。
+*
+*   执行用时分布 2 ms 击败 98.76% 使用 C 的用户
+*   消耗内存分布 5.70 MB 击败 88.16% 使用 C 的用户
+*
+**/
+char* longestPalindrome_2_impr2(char* s) {
+    // 
+    int maxl = 0;
+    char* start = s;
+    for (char * p = s; *p != '\0'; ++p) {
+        // 按照偶数长度扩展
+        char* l = p, *r = p + 1;
+        for (; l >= s && *r != '\0'; --l, ++r) {
+            if (*l != *r) {
+                //回文子串扩展结束
+                break;
+            }
+        }
+        int size = r - l - 1;
+        // (l, r)
+        if (size > maxl) {
+            maxl = size;
+            start = l + 1;
+        }
+        // 按照奇数长度扩展
+        l = p - 1, r = p + 1;
+        for (; l >= s && *r != '\0'; --l, ++r) {
+            if (*l != *r) {
+                //回文子串扩展结束
+                break;
+            }
+        }
+        size = r - l - 1;
+        if (size > maxl) {
+            maxl = size;
+            start = l + 1;
+        }
+    }
+    *(start + maxl) = '\0';
+    return start;
+}
+
 int main(void) {
     char s1[] = {'c','b','b','d','\0'};
     char s2[] = {'b','a','b','a','d','\0'};
-    char* rs1 = longestPalindrome_2(s1);
-    char* rs2 = longestPalindrome_2(s2);
+    char* rs1 = longestPalindrome_2_impr2(s1);
+    char* rs2 = longestPalindrome_2_impr2(s2);
     printf("%s\n", rs1);
     printf("%s\n", rs2);
     return 0;
