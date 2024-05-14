@@ -283,7 +283,7 @@ char* longestPalindrome_2(char* s) {
     }
     for (int i = length; i > -1; --i) {
         if (pals[i] != -1) {
-            // 就地返回 i是回文字长长度-1，pals[i]是起点。
+            // 就地返回 i是回文字长长度，pals[i]是起点。
             int start = pals[i];
             // '\0'字符位置
             //int e = pals[i] + i;
