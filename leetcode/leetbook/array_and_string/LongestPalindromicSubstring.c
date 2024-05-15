@@ -424,7 +424,8 @@ char* longestPalindrome_3(char* s) {
     //根据题意不存在空串
     int maxl = 1;
     char* lpa = s;
-    //TODO
+    //TODO 指针方式访问数组，不适合做步长较大的移动，否则容易越界访问报错。
+    //       如果是步长较大的，应该采用数组下标的方式，进行边界检查。
     //偶数
     for (char* l = s, *r = s + 1; *r != '\0'; ++l, ++r) {
         if (*l == *r && isPalindromes_1(l, r)) {
