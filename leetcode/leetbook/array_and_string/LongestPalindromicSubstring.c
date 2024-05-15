@@ -393,12 +393,87 @@ char* longestPalindrome_2_impr2(char* s) {
     return start;
 }
 
+/**
+*   方法三：定长扩展
+*   当找到一个长度为Len1的回文子串时，就没必要在去找长度小于或等于Len1的回文子串了。
+*
+*   先遍历s字符串，找到第一个回文子串时，长度记为Len1，位置记为start，末尾则为
+*   start + Len1 + 1 = end。在查找到回文子串时，(start, end)都是已知的，因此可以直接
+*   用双指针平行移动判断S[start + 1] =?= S[end + 1]，若相等则，判断Substring(start+1, end-1)
+*   是不是回文子串，若是则扩展，扩展后的长度，记为Len2，更新maxl为len2，。。直到结束。
+*
+*   执行用时分布 0 ms 击败 100.00% 使用 C 的用户
+*   消耗内存分布 5.87 MB 击败 70.86% 使用 C 的用户
+*
+**/
+bool isPalindromes_1(char* start, char* end) {
+    while (start < end) {
+        if (*start++ != *end--) {
+            return false;
+        }
+    }
+    return true;
+}
+char* longestPalindrome_3(char* s) {
+    if (*(s + 1) == '\0') {
+        return s;
+    }
+    if (*(s + 2) == '\0' && *s == *(s + 1)) {
+        return s;
+    }
+    //根据题意不存在空串
+    int maxl = 1;
+    char* lpa = s;
+    //TODO
+    //偶数
+    for (char* l = s, *r = s + 1; *r != '\0'; ++l, ++r) {
+        if (*l == *r && isPalindromes_1(l, r)) {
+            // 扩展
+            --l;++r;
+            for (; l >= s && *r != '\0'; --l, ++r) {
+                if (*l != *r) {
+                    break;
+                }
+            }
+            if (r - l - 1 > maxl) {
+            maxl = r - l - 1;
+                lpa = l + 1;
+            }
+            if (*r == '\0') 
+                break;
+        }
+    }
+    for (char* l = s, *r = s + 2; *r != '\0'; ++l, ++r) {
+        if (*l == *r && isPalindromes_1(l, r)) {
+            //扩展
+            --l; ++r;
+            for (; l >= s && *r != '\0'; --l, ++r) {
+                if (*l != *r) {
+                    break;
+                }
+            }
+            if (r - l - 1 > maxl) {
+                maxl = r - l - 1;
+                lpa = l + 1;
+            }
+            if (*r == '\0')
+                break;
+        }
+    }
+    *(lpa + maxl) = '\0';
+    return lpa;
+}
+
+
 int main(void) {
     char s1[] = {'c','b','b','d','\0'};
     char s2[] = {'b','a','b','a','d','\0'};
-    char* rs1 = longestPalindrome_2_impr2(s1);
-    char* rs2 = longestPalindrome_2_impr2(s2);
+    char s3[] = {'c','c','c','\0'};
+    char* rs1 = longestPalindrome_3(s1);
+    char* rs2 = longestPalindrome_3(s2);
+    char* rs3 = longestPalindrome_3(s3);
     printf("%s\n", rs1);
     printf("%s\n", rs2);
+    printf("%s\n", rs3);
     return 0;
 }
