@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
+#include<string.h>
 
 /**
 *   5. 最长回文子串 Longest Palindromic Substring
@@ -465,14 +466,111 @@ char* longestPalindrome_3(char* s) {
     return lpa;
 }
 
+/**
+*   力扣官方题解一：动态规划
+*
+* <https://leetcode.cn/problems/longest-palindromic-substring/solutions/255195/zui-chang-hui-wen-zi-chuan-by-leetcode-solution/>
+*
+*  如果"bab" 是一个回文串，那么"ababa"也是个回文串，因为首尾字母相同。
+*  P(i,j)表示是否是回文串，则
+*   P(i,j) = -> true  Si...Sj是回文串
+*           |
+*            -> false Si...Sj不是回文串，或i > j
+*
+*   动态规划状态转移方程：
+*       P(i,j) = P(i+1,j-1) ∩ (Si == Sj)
+*   显然当子串长度为1时，P(i+1,j-1)=false 因为i > j，但是长度为1的子串显然是个回文串。
+*   当长度为2时，只要两个字符相同就是回文串。
+*   因此长度为1或2的子串不符合上述状态方程，要特殊处理。
+*   状态转移方程边界条件：
+*
+*       P(i,i) = true, P(i,i+1) = (Si == Si+1)
+*
+*   时间复杂度O(n²) 空间复杂度O(n²)
+*
+*  执行用时分布 186 ms 击败 19.22% 使用 C 的用户
+*  消耗内存分布 7.10 MB 击败 25.82% 使用 C 的用户
+**/
+char* longestPalindrome_4(char* s) {
+    int length = strlen(s);   
+    if (length == 1) {
+        return s;
+    }
+    if (length == 2) {
+        if (*s == *(s+1)) {
+            return s;
+        }
+        else {
+            *(s+1) = '\0';
+            return s;
+        }
+    }
+    //记录状态
+    bool dp[length][length];
+    int maxl = 1;
+    int st = 0;
+    for (int i = 0; i < length; ++i) {
+        for (int j = 0; j < length; ++j) {
+            if (i == j) {
+                //边界条件一 P(i,i) = true
+                dp[i][i] = true;
+            }
+            else if (i + 1 == j && s[i] == s[j]) {
+                //边界条件二 P(i,i+1) = (Si == Si+1)
+                dp[i][j] = true;
+                if (j - i + 1 > maxl) {
+                    maxl = j - i + 1;
+                    st = i;
+                }
+            }
+            else {
+                //其它情况先初始化为false;
+                dp[i][j] = false;
+            }
+        }
+    }
+    for (int len = 2; len < length; ++len) {
+        //len=j - i + 1;
+        for (int i = 0, j = len; j < length; ++i, ++j) {
+            //状态转移方程 
+            //dp[i][j] = dp[i+1][j-1] && (s[i] == s[j]);
+            if (s[i] == s[j] && (dp[i][j] = dp[i+1][j-1]) == true) {
+                if (j - i + 1> maxl) {
+                    maxl = j - i + 1;
+                    st = i;
+                }
+            }
+        }
+    }
+/**
+    for (int i = 0; i < length; ++i) {
+        for (int j = 0; j < length; ++j) {
+            printf("[%d]", dp[i][j]);
+        }
+        printf("\n");
+    }
+**/
+    /**
+    *   以"babad"为例得到的dp数组
+    *     0  1  2  3  4
+    *  0 [1][0][1][0][0]
+    *  1 [0][1][0][1][0]
+    *  2 [0][0][1][0][0]
+    *  3 [0][0][0][1][0]
+    *  4 [0][0][0][0][1]
+    **/
+    s[st + maxl] = '\0';
+    return &s[st];
+}
+
 
 int main(void) {
     char s1[] = {'c','b','b','d','\0'};
     char s2[] = {'b','a','b','a','d','\0'};
     char s3[] = {'c','c','c','\0'};
-    char* rs1 = longestPalindrome_3(s1);
-    char* rs2 = longestPalindrome_3(s2);
-    char* rs3 = longestPalindrome_3(s3);
+    char* rs1 = longestPalindrome_4(s1);
+    char* rs2 = longestPalindrome_4(s2);
+    char* rs3 = longestPalindrome_4(s3);
     printf("%s\n", rs1);
     printf("%s\n", rs2);
     printf("%s\n", rs3);
