@@ -467,6 +467,72 @@ char* longestPalindrome_3(char* s) {
 }
 
 /**
+* 方法三优化：
+*   第二轮循环时，只找比偶数长度大的奇数回文子串，因此子串
+*   右端点初始位置不再是*r = s + 2, 而是*r = s + maxl，
+*   减少了第二轮遍历次数，而且由于s+2变成了s+maxl避免了指针
+*   溢出因此，不在需要额外处理长度为1和2的字符串了，因为长度
+*   为1或2时，此时maxl只能为0或2，不会溢出。
+*
+*  执行用时分布 0 ms 击败 100.00% 使用 C 的用户
+*  消耗内存分布 6.00 MB 击败 59.28% 使用 C 的用户
+*
+**/
+char* longestPalindrome_3_impr1(char* s) {
+/*
+    if (*(s + 1) == '\0') {
+        return s;
+    }
+    if (*(s + 2) == '\0' && *s == *(s + 1)) {
+        return s;
+    }
+*/
+    //从0开始，以便处理长度为1或2时的奇数轮遍历 
+    int maxl = 0;
+    char* lpa = s;
+    //TODO 指针方式访问数组，不适合做步长较大的移动，否则容易越界访问报错。
+    //       如果是步长较大的，应该采用数组下标的方式，进行边界检查。
+    //偶数
+    for (char* l = s, *r = s + 1; *r != '\0'; ++l, ++r) {
+        if (*l == *r && isPalindromes_1(l, r)) {
+            // 扩展
+            --l;++r;
+            for (; l >= s && *r != '\0'; --l, ++r) {
+                if (*l != *r) {
+                    break;
+                }
+            }
+            if (r - l - 1 > maxl) {
+            maxl = r - l - 1;
+                lpa = l + 1;
+            }
+            if (*r == '\0') 
+                break;
+        }
+    }
+    for (char* l = s, *r = s + maxl; *r != '\0'; ++l, ++r) {
+        if (*l == *r && isPalindromes_1(l, r)) {
+            //扩展
+            --l; ++r;
+            for (; l >= s && *r != '\0'; --l, ++r) {
+                if (*l != *r) {
+                    break;
+                }
+            }
+            if (r - l - 1 > maxl) {
+                maxl = r - l - 1;
+                lpa = l + 1;
+            }
+            if (*r == '\0')
+                break;
+        }
+    }
+    *(lpa + maxl) = '\0';
+    return lpa;
+}
+
+
+/**
 *   力扣官方题解一：动态规划
 *
 * <https://leetcode.cn/problems/longest-palindromic-substring/solutions/255195/zui-chang-hui-wen-zi-chuan-by-leetcode-solution/>
@@ -568,9 +634,9 @@ int main(void) {
     char s1[] = {'c','b','b','d','\0'};
     char s2[] = {'b','a','b','a','d','\0'};
     char s3[] = {'c','c','c','\0'};
-    char* rs1 = longestPalindrome_4(s1);
-    char* rs2 = longestPalindrome_4(s2);
-    char* rs3 = longestPalindrome_4(s3);
+    char* rs1 = longestPalindrome_3_impr1(s1);
+    char* rs2 = longestPalindrome_3_impr1(s2);
+    char* rs3 = longestPalindrome_3_impr1(s3);
     printf("%s\n", rs1);
     printf("%s\n", rs2);
     printf("%s\n", rs3);
