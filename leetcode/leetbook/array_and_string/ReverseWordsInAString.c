@@ -82,7 +82,10 @@ char* reverseWords_1(char* s) {
 * 方法二：倒序遍历
 *   思路：倒序遍历空格，正向遍历字符。
 *   
-*   
+*   时间复杂度O(m + n) m是字符串长度，n是所有单词总长度。
+*
+*   执行用时分布 1 ms 击败 73.97% 使用 C 的用户
+*   消耗内存分布 6.26 MB 击败 21.48% 使用 C 的用户 
 */
 char* reverseWords_2(char* s) {
     int len = 0;
@@ -98,13 +101,11 @@ char* reverseWords_2(char* s) {
     while (p >= s) {
         //单词末尾字符
         while(--p >= s && *p == ' ');
+        if (p < s) break;
         char* e = p;
         //单词前一个空格
         while(--p >= s && *p != ' ');
         char* s1 = p + 1;
-        if (e < s && s1 < s) {
-            break;
-        }
         while((*prs++ = *s1++) && s1 <= e);
         //单词后跟一个空格
         *prs++ = ' ';
@@ -115,16 +116,95 @@ char* reverseWords_2(char* s) {
     return rs;
 }
 
+/**
+*   方法三：原地算法
+*       1. 先将整个字符串首尾交换。
+*       2. 再将每个单词首尾交换。
+*       3. 再调整空格
+*   时间复杂度O(3n) 步骤1需要n次遍历，步骤2，也需要n次遍历,
+*       步骤3，也需要n次遍历。
+*   空间复杂度O(1)
+*
+*   执行用时分布 12 ms 击败 8.34% 使用 C 的用户
+*   消耗内存分布 5.98 MB 击败 67.43% 使用 C 的用户
+*
+**/
+void swap(char* a, char* b) {
+    *a = *a ^ *b;
+    *b = *a ^ *b;
+    *a = *a ^ *b;
+}
+char* reverseWords_3(char* s) {
+    int len = strlen(s);
+    for (int i = 0, j = len-1; i < j; ++i, --j) {
+        swap(s + i, s + j); 
+    }
+    //返回字符串的长度
+    int n = 0;
+    for (int cur = 0; cur < len; ++cur) {
+        //words = substring(i, j);
+        int i = cur;
+
+        while (i < len && s[i] == ' ') {
+            ++i;
+        }
+        if (i == len) {
+            break;
+        }
+        int j = i + 1;
+        while (j < len && s[j] != ' ') {
+            ++j;
+        }
+        n += j - i + 1;
+        cur = j;
+        --j;
+        while(i < j) {
+            swap(s + i, s + j);
+            ++i;
+            --j;
+        }
+    }
+    //处理所有空格
+    for (int k = 0; k < n; ++k) {
+        int i = k;
+        while (i < len && s[i] == ' ') {
+            ++i;
+        }
+        int j = i;
+        while (j < len && s[j] != ' ') {
+            ++j;
+        }
+        if (i > k) {
+            //需要移动
+            while (i < j) {
+                s[k++] = s[i++];
+            }
+            // 移动后有残余的字母，已经是无效字母了，会影响下一轮循环
+            int b = k;
+            while (b < j) {
+                s[b++] = ' ';
+            }
+        }
+        else {
+            k = j;
+        }
+    }
+    s[n-1] = '\0';
+    return s;
+}
 
 int main(void) {
+    //15 15
     char s1[] = "the sky is blue";
+    //15 11
     char s2[] = "  hello world  ";
+    //16 14
     char s3[] = "a good   example";
-    char* rs1 = reverseWords_2(s1);
-    char* rs2 = reverseWords_2(s2);
-    char* rs3 = reverseWords_2(s3);
-    printf("rs1=%s\n", rs1);
-    printf("%s\n", rs2);
-    printf("%s\n", rs3);
+    char* rs1 = reverseWords_3(s1);
+    char* rs2 = reverseWords_3(s2);
+    char* rs3 = reverseWords_3(s3);
+    printf("rs1=%s#\n", rs1);
+    printf("%s#\n", rs2);
+    printf("%s#\n", rs3);
     return 0;
 }
