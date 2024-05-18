@@ -29,3 +29,6 @@
 
 ### [5. 最长回文子串Longest Parlindromic Substring](https://leetcode.cn/problems/longest-palindromic-substring/description/)
 -> [LongestPalindormicSubstring.c](leetbook/array_and_string/LongestPalindormicSubstring.c)
+
+### [151. 反转字符串中的单词 Reverse Words in a String](https://leetcode.cn/problems/reverse-words-in-a-string/description/)
+-> [ReverseWordsInAString.c](leetbook/array_and_string/ReverseWordsInAString.c)
