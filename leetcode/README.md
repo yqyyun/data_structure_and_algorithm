@@ -38,3 +38,9 @@
 
 ### [28. 找出字符串中第一个匹配项的下标](https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/description/)
 --> [FindTheIndexOfTheFirstOccurrenceInAString.c](leetbook/array_and_string/FindTheIndexOfTheFirstOccurrenceInAString.c)
+
+### [344.反转字符串Reverse String](https://leetcode.cn/problems/reverse-string/description/)
+--> [ReverseString.c](leetbook/array_and_string/ReverseString.c)
+
+### [561.数组拆分Array Partition](https://leetcode.cn/problems/array-partition/description/)
+--> [ArrayPartition.c](leetbook/array_and_string/ArrayPartition.c)
