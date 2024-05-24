@@ -170,7 +170,83 @@ int arrayPairSum_3(int* nums, int numsSize) {
     return sum;
         
 }
-
+//方法三改进，修改内存分配方式。
+int arrayPairSum_3_impr1(int* nums, int numsSize) {
+    int bucketsSize = 19;
+    int offset = 9;
+    LinkList n1s[bucketsSize];
+    LinkList n2s[bucketsSize];
+    LinkList* buckets = n1s;
+    LinkList tails[bucketsSize];
+    for (int i = 0; i < bucketsSize; ++i) {
+        LinkList dummy = (LinkList)malloc(sizeof(Node));
+        dummy->next = NULL;
+        buckets[i] = dummy;
+        tails[i] = dummy;
+    }
+    for (int i = 0; i < numsSize; ++i) {
+        //先入桶, 尾插法
+        int index = nums[i] % 10 + offset;
+        LinkList newNode = (LinkList)malloc(sizeof(Node));
+        newNode->data = nums[i];
+        newNode->next = NULL;
+        //尾插
+        tails[index]->next = newNode;
+        tails[index] = newNode;
+    }
+    LinkList* temp = n2s;
+    for (int j = 0; j < bucketsSize; ++j) {
+        LinkList dummy = (LinkList)malloc(sizeof(Node));
+        dummy->next = NULL;
+        temp[j] = dummy;
+    }
+    //100/0
+    int base = 1;
+    for (int i = 1; i < 4 + 1; ++i) {
+        //处理剩余三轮, 采用尾插法
+        base *= 10;
+        for (int j = 0; j < bucketsSize; ++j) {
+            //尾指针数组初始化为新的node指针数组头节点。
+            //新节点有效元素为空（除了空节点）
+            tails[j] = temp[j];
+        }
+        for (int j = 0; j < bucketsSize; ++j) {
+            LinkList p = buckets[j]->next;
+            LinkList q;
+            //FIX 清空数组, 修复死循环错误
+            buckets[j]->next = NULL;
+            while (p != NULL) {
+                int index = (p->data / base % 10 ) + 9;
+                q = p;
+                p = p->next;
+                //将节点尾插到新链表数组。
+                tails[index]->next = q;
+                q->next = NULL;
+                //更新尾节点指针数组
+                tails[index] = q;
+            }
+        }
+        Node** t = buckets;
+        buckets = temp;
+        temp = t;
+    }
+    // 将排序结果保存到nums，并释放内存
+    int sum = 0;
+    int k = 0;
+    for (int i = 0; i < bucketsSize; ++i) {
+        LinkList p = buckets[i]->next;
+        LinkList q;
+        while(p != NULL) {
+            q = p;
+            p = p->next;
+            nums[k] = q->data;
+            if (k%2 == 0) sum += nums[k];
+            ++k;
+            free(q);
+        }
+    }
+    return sum;
+}
 void print(LinkList * lists) {
     for (int k = 0; k < bucketsSize; ++k) {
         printf("%d: ", k);
@@ -199,14 +275,47 @@ void print(LinkList * lists) {
     }
 }
 
+/**
+*    方法四：计数排序
+*
+*   
+**/
+int arrayPairSum_4(int *nums, int numsSize) {
+    int sum = 0;
+    int min = nums[0];
+    int max = nums[0];
+    for (int i = 0; i < numsSize; ++i) {
+        if (min > nums[i]) 
+            min = nums[i];
+        if (max < nums[i])
+            max = nums[i];
+    }
+    int len = max - min + 1;
+    int countNums[len];
+    for (int i = 0; i < len; ++i) {
+        countNums[i] = 0;
+    }
+    for (int i = 0; i < numsSize; ++i) 
+        ++countNums[nums[i]-min];
+    int k = 0;
+    for (int i = 0; i < len; ++i) {
+        for (int j = countNums[i]; j > 0; --j) {
+            nums[k++] = min + i;
+        }
+    }
+    for (int i = 0; i < numsSize; i += 2) 
+        sum += nums[i];
+    return sum;
+}
+
 
 int main(void) {
     int n1[4] = {1,4,3,2};
     int n2[6] = {6,2,6,5,1,2};
     int n3[4] = {6214, -2290, 2833, -7908};
-    //printf("%d\n", arrayPairSum_3(n1, 4));
-    //printf("%d\n", arrayPairSum_3(n2, 6));
+    printf("%d\n", arrayPairSum_4(n1, 4));
+    printf("%d\n", arrayPairSum_4(n2, 6));
     //-5075
-    printf("%d\n", arrayPairSum_3(n3, 4));
+    printf("%d\n", arrayPairSum_4(n3, 4));
     return EXIT_SUCCESS;
 }
