@@ -44,3 +44,7 @@
 
 ### [561.数组拆分Array Partition](https://leetcode.cn/problems/array-partition/description/)
 --> [ArrayPartition.c](leetbook/array_and_string/ArrayPartition.c)
+
+### [167.两数之和Ⅱ - 输入有序数组two sum-ii-input-array-is-sorted](https://leetcode.cn/problems/two-sum-ii-input-array-is-sorted/description/)
+-->[TwoSumII.c](leetbook/array_and_stringy/TwoSumII.c)
+
