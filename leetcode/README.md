@@ -1,7 +1,8 @@
 # 题目代码对照表
 <!--toc-->
 - [数组和字符串Array and String](#数组和字符串)
-    - [1991. 找到数组的中间位置](#找到数组的中间位置)
+    - [1991. 找到数组的中间位置](#1991. 找到数组的中间位置Find Middle Index)
+    - [485. 最大连续1的个数Max Consecutive Ones](#485.最大连续1的个数Max Consecutive Ones)
 
 ## 数组和字符串
 ### [1991. 找到数组的中间位置Find Middle Index](https://leetcode.cn/classic/problems/find-the-middle-index-in-array/description/)
@@ -50,3 +51,7 @@
 
 ### [27.移除元素Remove Element](https://leetcode.cn/problems/remove-element/)
 --> [RemoveElement.c](leetbook/array_and_string/RemoveElement.c)
+
+### [485.最大连续1的个数Max Consecutive Ones](https://leetcode.cn/problems/max-consecutive-ones/description/)
+--> [MaxConsecutiveOnes.c](leetbook/array_and_string/MaxConsecutiveOnes.c)
+
