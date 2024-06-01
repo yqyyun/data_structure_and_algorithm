@@ -46,5 +46,7 @@
 --> [ArrayPartition.c](leetbook/array_and_string/ArrayPartition.c)
 
 ### [167.两数之和Ⅱ - 输入有序数组two sum-ii-input-array-is-sorted](https://leetcode.cn/problems/two-sum-ii-input-array-is-sorted/description/)
--->[TwoSumII.c](leetbook/array_and_stringy/TwoSumII.c)
+-->[TwoSumII.c](leetbook/array_and_string/TwoSumII.c)
 
+### [27.移除元素Remove Element](https://leetcode.cn/problems/remove-element/)
+--> [RemoveElement.c](leetbook/array_and_string/RemoveElement.c)
